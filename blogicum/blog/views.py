@@ -1,7 +1,8 @@
+from django.http import Http404
 from django.shortcuts import render
 
 
-posts = [
+posts: list[dict] = [
     {
         'id': 0,
         'location': 'Остров отчаянья',
@@ -44,21 +45,20 @@ posts = [
     },
 ]
 
+organized_posts = {post['id']: post for post in posts}
 
-# Create your views here.
+
 def index(request):
-    template = 'blog/index.html'
-    context = {'posts': posts[::-1]}
-    return render(request, template, context)
+    return render(request, 'blog/index.html', {'posts': reversed(posts)})
 
 
-def post_detail(request, id):
-    template = 'blog/detail.html'
-    context = {'post': posts[id]}
-    return render(request, template, context)
+def post_detail(request, post_id):
+    try:
+        return render(request, 'blog/detail.html',
+                      {'post': organized_posts[post_id]})
+    except KeyError:
+        raise Http404('Post does not exist')
 
 
 def category_posts(request, category_slug):
-    template = 'blog/category.html'
-    context = {'category': category_slug}
-    return render(request, template, context)
+    return render(request, 'blog/category.html', {'category': category_slug})
