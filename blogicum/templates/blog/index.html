@@ -5,6 +5,6 @@
   <!-- Перебираем в цикле все посты -->
   {% for post in posts %}
     <hr>
-    {% include "includes/article.html" with tamplate="index" %}
+    {% include "./includes/article.html" with tamplate=True %}
   {% endfor %}
 {% endblock %}
